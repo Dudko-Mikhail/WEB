@@ -14,66 +14,67 @@
 	</style>
 	<section id="section"></section>
 	<script>
-		/*Class Student*/
+		/*studentModule*/
 		////////////////////////////////////////////////////////////////////
 		var studentModule = (function () {
 			var size = 0;
 			var mass = [];
-			function student(name, surname, age, averageMark) {
-				this.name = name;
+			function student(surname, name, age, averageMark) {
+
 				this.surname = surname;
+				this.name = name;
 				this.age = age;
 				this.averageMark = averageMark;
 			}
-			var addStudent = function (name, surname, age, averageMark) {
-				mass[size] = new student(name, surname, age, averageMark);
+			var addStudent = function (surname, name, age, averageMark) {
+				mass[size] = new student(surname, name, age, averageMark);
 				size++;
 			}
 			var getName = function (ind) {
-				if (size == 0 || ind > size - 1) {
-					return undefined;
+				if (size == 0 || ind >= size) {
+					return;
 				}
 				return mass[ind].name;
 			}
 			var getSurname = function (ind) {
-				if (size == 0 || ind > size - 1) {
-					return undefined;
+				if (size == 0 || ind >= size) {
+					return;
 				}
 				return mass[ind].surname;
 			}
 			var getAge = function(ind) {
-				if (size == 0 || ind > size - 1) {
-					return undefined;
+				if (size == 0 || ind >= size) {
+					return;
 				}
 				return mass[ind].age;
 			}
 			var getAverageMark = function(ind) {
-				if (size == 0 || ind > size - 1) {
-					return undefined;
+				if (size == 0 || ind >= size) {
+					return;
 				}
 				return mass[ind].averageMark;
 			}
 			var setName = function (ind, name) {
-				if (size == 0 || ind > size - 1) {
-					return undefined;
+				if (size == 0 || ind >= size) {
+					return;
 				}
 				mass[ind].name = name;
 			}
 			var setSurname = function (ind, surname) {
-				if (size == 0 || ind > size - 1) {
-					return undefined;
+				if (size == 0 || ind >= size) {
+					return;
 				}
 				mass[ind].surname = surname;
 			}
 			var setAge = function(ind, age) {
-				if (size == 0 || ind > size - 1) {
-					return undefined;
+				if (size == 0 || ind >= size) {
+					return;
 				}
 				mass[ind].age = age;
 			}
 			var setAverageMark = function(ind, averageMark) {
-				if (size == 0 || ind > size - 1) {
-					return undefined;
+				if (size == 0 || ind >= size) {
+					return;
 				}
 				mass[ind].averageMark = averageMark;
 			}
@@ -81,14 +82,14 @@
 				return size;
 			}
 			var getStudent = function(ind) {
-				if (size == 0 || ind > size - 1) {
-					return undefined;
+				if (size == 0 || ind >= size) {
+					return;
 				}
 				return mass[ind];
 			}
 			var removeStudent = function(ind) {
-				if (size == 0 || ind > size - 1) {
-					return undefined;
+				if (size == 0 || ind >= size) {
+					return;
 				}
 				temp = [];
 				for (i = 0, cur = 0; i < size; i++) {
@@ -98,6 +99,7 @@
 					}
 				}
 				mass = temp;
+				temp = [];
 				size--;
 			}
 			return {
@@ -122,7 +124,7 @@
 			for (i = 0; i < 4; i++) {
 				td = document.createElement("td");
 				tr.appendChild(td);
-				i == 0 ? td.innerHTML = "Имя" : i == 1 ? td.innerHTML = "Фамилия" : i == 2 ? td.innerHTML = "Возраст" : td.innerHTML = "Средний балл";
+				i == 0 ? td.append("Фамилия") : i == 1 ? td.append("Имя") : i == 2 ? td.append("Возраст") : td.append("Средний балл");
 			}
 			table.appendChild(tr);
 			for (i = 0; i < studentModule.getSize(); i++) {
@@ -130,32 +132,35 @@
 				for (j = 0; j < 4; j++) {
 					td = document.createElement("td");
 					tr.appendChild(td);
-					j == 0 ? td.innerHTML = studentModule.getName(i) : j == 1 ? td.innerHTML = studentModule.getSurname(i) : j == 2 ?
-					 td.innerHTML = studentModule.getAge(i) : td.innerHTML = studentModule.getAverageMark(i);
+					j == 0 ? td.append(studentModule.getSurname(i)) : j == 1 ? td.append(studentModule.getName(i)) : j == 2 ?
+					 td.append(studentModule.getAge(i)) : td.append(studentModule.getAverageMark(i));
 				}
 				table.appendChild(tr);
 			}
 			return table;
 		}
+
 		function computeAverge(table) {
-			var findAverage = document.querySelector("table"); // добавить ещё одну функцию 
+			var findAverage = document.querySelector("table"); 
 			var allTd = findAverage.querySelectorAll("td"), averageMark = 0;
 			for (i = 7; i < allTd.length; i += 4) {
 				averageMark += Number(allTd[i].innerHTML);
 			}
 			averageMark /= allTd.length / 4 - 1;
-			return averageMark;
+			return Number(averageMark.toFixed(2));
 		}
+
 		studentModule.addStudent("Иванов", "Иван", 19, 9);
 		studentModule.addStudent("Петров", "Степан", 18, 7);
 		studentModule.addStudent("Сидоров", "Андрей", 19, 8);
 		studentModule.addStudent("Филатов", "Евгений", 22, 8.5);
+		studentModule.addStudent("Плюшкин", "Алексей", 21, 7);
 		var table = tableStudent(studentModule);
-		document.getElementById("section").appendChild(table);
+		document.querySelector("#section").appendChild(table);
 		var average = computeAverge(table);
 		var totalAverageMark = document.createElement("p");
 		totalAverageMark.textContent = "Общий средний балл среди студентов: " + computeAverge(table);
-		document.getElementById("section").appendChild(totalAverageMark);
+		document.querySelector("#section").appendChild(totalAverageMark);
 	</script>
 </body>
 </html>
