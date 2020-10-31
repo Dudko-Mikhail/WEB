@@ -208,6 +208,7 @@
 		totalAverageMark.textContent = "Общий средний балл среди студентов: " + computeAverge(table);
 		document.querySelector("#section").appendChild(totalAverageMark);
 	}
+
 	function deleteRow(current) {
 		let allDelButtons = table.getElementsByClassName("delButton");
 		for (let i = 0; i < allDelButtons.length; i++) {
@@ -220,6 +221,7 @@
 		totalAverageMark.textContent = "Общий средний балл среди студентов: " + computeAverge(table);
 		document.querySelector("#section").appendChild(totalAverageMark);
 	}
+
 	function editRow(current) {
 		let allEditButtons = table.getElementsByClassName("editButton");
 		var newTr = document.createElement("tr");
@@ -243,6 +245,7 @@
 		document.myForm.age.value = "";
 		document.myForm.averageMark.value = "";
 	}
+	
 	function createRow(student) {
 		var tr = document.createElement("tr"), td;
 		for (let prop in student) {
