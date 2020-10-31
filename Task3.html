@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Task3</title>
+</head>
+<body>
+	<style>
+		td {
+			padding: 0 5px 0 5px;
+		}
+		p {
+			margin: 5px 0 0 7px; 
+		}
+		input, button {
+			margin-top: 5px;
+		}
+		.first {
+			margin-left: 7px;
+		}
+	</style>
+	<form name="myForm">
+		<input class="first" type="text" name="surname" placeholder="Фамилия"/>
+		<input type="text" name="name" placeholder="Имя"/>
+		<input type="text" name="age" placeholder="Возраст"/>
+		<input type="text" name="averageMark" placeholder="Средний балл"/>
+		<button id="addStudent" type="reset" onclick="tableAddStudent()">Добавить</button>
+		<br>
+		<input class="first" type="text" name="index" placeholder="Номер студента"/>
+		<button id="removeStudent" type="reset" onclick="tableRemoveStudent()">Удалить</button>
+	</form>
+	<section id="section"></section>
+<script>
+	/*studentModule*/
+////////////////////////////////////////////////////////////////////
+	var studentModule = (function() {
+		var size = 0;
+		var mass = [];
+
+		function Student(surname, name, age, averageMark) {
+			this.surname = surname;
+			this.name = name;
+			age == "" ? this.age = undefined : this.age = +age;
+			averageMark == "" ? this.averageMark = undefined : this.averageMark = +averageMark;
+		}
+		var addStudent = function(surname, name, age, averageMark) {
+			mass[size] = new Student(surname, name, age, averageMark);
+			size++;
+		};
+		var getName = function(ind) {
+			if (size == 0 || ind >= size) {
+				return;
+			}
+			return mass[ind].name;
+		};
+		var getSurname = function(ind) {
+			if (size == 0 || ind >= size) {
+				return;
+			}
+			return mass[ind].surname;
+		};
+		var getAge = function(ind) {
+			if (size == 0 || ind >= size) {
+				return;
+			}
+			return mass[ind].age;
+		};
+		var getAverageMark = function(ind) {
+			if (size == 0 || ind >= size) {
+				return;
+			}
+			return mass[ind].averageMark;
+		};
+		var setName = function(ind, name) {
+			if (size == 0 || ind >= size) {
+				return;
+			}
+			mass[ind].name = name;
+		};
+		var setSurname = function(ind, surname) {
+			if (size == 0 || ind >= size) {
+				return;
+			}
+			mass[ind].surname = surname;
+		};
+		var setAge = function(ind, age) {
+			if (size == 0 || ind >= size) {
+				return;
+			}
+			if (age == "") {
+				mass[ind].age = undefined;
+			}
+			else {
+				mass[ind].age = +age;
+			}
+		};
+		var setAverageMark = function(ind, averageMark) {
+			if (size == 0 || ind >= size) {
+				return;
+			}
+			if (averageMark == "") {
+				mass[ind].averageMark = undefined;
+			}
+			else {
+				mass[ind].averageMark = +averageMark;
+			}
+		};
+		var getSize = function() {
+			return size;
+		};
+		var getStudent = function(ind) {
+			if (size == 0 || ind >= size) {
+				return;
+			}
+			return mass[ind];
+		};
+		var removeStudent = function(ind) {
+			if (size == 0 || ind >= size) {
+				return;
+			}
+			let temp = [];
+			for (let i = 0, cur = 0; i < size; i++) {
+				if (i != ind) {
+					temp[cur] = mass[i];
+					cur++;
+				}
+			}
+			mass = temp;
+			size--;
+		};
+		return {
+			addStudent: addStudent,
+			removeStudent: removeStudent,
+			getName: getName,
+			getSurname: getSurname,
+			getAge: getAge,
+			getAverageMark: getAverageMark,
+			setName: setName,
+			setSurname: setSurname,
+			setAge: setAge,
+			setAverageMark: setAverageMark,
+			getSize: getSize,
+			getStudent: getStudent
+		};
+	}());
+	////////////////////////////////////////////////////////////////////
+	function tableStudent(studentModule) {
+		var table = document.createElement("table"),
+			tr, td;
+		tr = document.createElement("tr");
+		for (let i = 0; i < 6; i++) {
+			td = document.createElement("td");
+			tr.appendChild(td);
+			i == 0 ? td.append("Фамилия") : i == 1 ? td.append("Имя") : i == 2 ? td.append("Возраст") : i == 3 ?
+			 td.append("Средний балл") : i == 4 ? td.append("Удаление") : td.append("Редактирование");
+		}
+		table.appendChild(tr);
+		for (let i = 0; i < studentModule.getSize(); i++) {
+			tr = createRow(studentModule.getStudent(i));
+			table.appendChild(tr);
+			
+		}
+		return table;
+	}
+
+	function computeAverge(table) {
+		var markArray = table.getElementsByClassName("averageMark");
+		let averageMark = 0;
+		for (let i = 0; i < markArray.length; i++) {
+			averageMark += +markArray[i].innerHTML;
+		}
+		averageMark /= markArray.length;
+		return +averageMark.toFixed(2);
+	}
+
+	studentModule.addStudent("Иванов", "Иван", 19, 9);
+	studentModule.addStudent("Петров", "Степан", 18, 7);
+	studentModule.addStudent("Сидоров", "Андрей", 19, 8);
+	studentModule.addStudent("Филатов", "Евгений", 22, 8.5);
+	studentModule.addStudent("Плюшкин", "Алексей", 21, 7);
+	var table = tableStudent(studentModule);
+	table.id = "myTable";
+	document.querySelector("#section").appendChild(table);
+	var totalAverageMark = document.createElement("p");
+	totalAverageMark.textContent = "Общий средний балл среди студентов: " + computeAverge(table);
+	document.querySelector("#section").appendChild(totalAverageMark);
+
+	function tableAddStudent() {
+		if (document.myForm.surname.value == "" && document.myForm.name.value == "" && document.myForm.age.value == "" &&
+			document.myForm.averageMark.value == "") {
+			return;
+		}
+		studentModule.addStudent(document.myForm.surname.value, document.myForm.name.value, document.myForm.age.value, document.myForm.averageMark.value);
+		var tr;
+		tr = createRow(studentModule.getStudent(studentModule.getSize() - 1));
+		table.appendChild(tr);
+		totalAverageMark.textContent = "Общий средний балл среди студентов: " + computeAverge(table);
+		document.querySelector("#section").appendChild(totalAverageMark);
+	}
+
+	function tableRemoveStudent() {
+		var index = document.myForm.index.value;
+		if (index == "") {
+			return;
+		}
+		index = +index;
+		studentModule.removeStudent(index);
+		table.deleteRow(index + 1);
+		totalAverageMark.textContent = "Общий средний балл среди студентов: " + computeAverge(table);
+		document.querySelector("#section").appendChild(totalAverageMark);
+	}
+	function deleteRow(current) {
+		let allDelButtons = table.getElementsByClassName("delButton");
+		for (let i = 0; i < allDelButtons.length; i++) {
+			if (current == allDelButtons[i]) {
+				table.deleteRow(i + 1);
+				studentModule.removeStudent(i);
+				break;
+			}
+		}
+		totalAverageMark.textContent = "Общий средний балл среди студентов: " + computeAverge(table);
+		document.querySelector("#section").appendChild(totalAverageMark);
+	}
+	function editRow(current) {
+		let allEditButtons = table.getElementsByClassName("editButton");
+		var newTr = document.createElement("tr");
+		for (let i = 0; i < allEditButtons.length; i++) {
+			if (current == allEditButtons[i]) {
+				if (document.myForm.surname.value == "" && document.myForm.name.value == "" && document.myForm.age.value == "" &&
+					document.myForm.averageMark.value == "") {
+					return;
+				}
+				studentModule.setSurname(i, document.myForm.surname.value);
+				studentModule.setName(i, document.myForm.name.value);
+				studentModule.setAge(i, document.myForm.age.value);
+				studentModule.setAverageMark(i, document.myForm.averageMark.value);
+				table.rows[i + 1].innerHTML = createRow(studentModule.getStudent(i)).innerHTML;
+				totalAverageMark.textContent = "Общий средний балл среди студентов: " + computeAverge(table);
+				document.querySelector("#section").appendChild(totalAverageMark);
+			}
+		}
+		document.myForm.surname.value = "";
+		document.myForm.name.value = "";
+		document.myForm.age.value = "";
+		document.myForm.averageMark.value = "";
+	}
+	function createRow(student) {
+		var tr = document.createElement("tr"), td;
+		for (let prop in student) {
+			td = document.createElement("td");
+			td.append(student[prop]);
+			if (prop == "averageMark") {
+				td.className = "averageMark";
+			}
+			tr.appendChild(td);
+		}
+		td = document.createElement("td");
+		let button = document.createElement("button");
+		button.setAttribute("onclick", "deleteRow(this)");
+		button.className = "delButton";
+		button.textContent = "Удалить";
+		td.appendChild(button);
+		tr.appendChild(td);
+		td = document.createElement("td");
+		let edit = document.createElement("button");
+		edit.setAttribute("onclick", "editRow(this)");
+		edit.className = "editButton";
+		edit.textContent = "Редактировать";
+		td.appendChild(edit);
+		tr.appendChild(td);
+		return tr;
+	}
+</script>
+</body>
+</html>
