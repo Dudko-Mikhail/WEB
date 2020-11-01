@@ -163,7 +163,7 @@
 	}
 
 	function computeAverge(table) {
-		var markArray = table.getElementsByClassName("averageMark");
+		var markArray = table.querySelectorAll(".averageMark");
 		let averageMark = 0;
 		for (let i = 0; i < markArray.length; i++) {
 			averageMark += +markArray[i].innerHTML;
@@ -210,7 +210,7 @@
 	}
 
 	function deleteRow(current) {
-		let allDelButtons = table.getElementsByClassName("delButton");
+		let allDelButtons = table.querySelectorAll(".delButton");
 		for (let i = 0; i < allDelButtons.length; i++) {
 			if (current == allDelButtons[i]) {
 				table.deleteRow(i + 1);
@@ -223,7 +223,7 @@
 	}
 
 	function editRow(current) {
-		let allEditButtons = table.getElementsByClassName("editButton");
+		let allEditButtons = table.querySelectorAll(".editButton");
 		var newTr = document.createElement("tr");
 		for (let i = 0; i < allEditButtons.length; i++) {
 			if (current == allEditButtons[i]) {
@@ -240,10 +240,7 @@
 				document.querySelector("#section").appendChild(totalAverageMark);
 			}
 		}
-		document.myForm.surname.value = "";
-		document.myForm.name.value = "";
-		document.myForm.age.value = "";
-		document.myForm.averageMark.value = "";
+		document.myForm.reset();
 	}
 	
 	function createRow(student) {
