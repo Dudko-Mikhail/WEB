@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+	<meta charset="utf-8">
+	<title>Task4</title>
+</head>
+<body>
+	<style>
+		td {
+			padding: 3px;
+		}
+		p {
+			margin: 5px 0 0 7px; 
+		}
+		input, button {
+			margin-top: 5px;
+		}
+		.first {
+			margin-left: 7px;
+		}
+		table {
+			margin: 10px 2px 0 10px
+		}
+	</style>
+	<form id="myForm">
+		<input class="first" type="text" id="surname" placeholder="Фамилия"/>
+		<input type="text" id="name" placeholder="Имя"/>
+		<input type="text" id="age" placeholder="Возраст"/>
+		<input type="text" id="averageMark" placeholder="Средний балл"/>
+		<button id="addStudent" type="reset" onclick="tableAddStudent()">Добавить</button>
+		<br>
+		<input class="first" type="text" id="index" placeholder="Номер студента"/>
+		<button id="removeStudent" type="reset" onclick="tableRemoveStudent()">Удалить</button>
+	</form>
+	<section id="section"></section>
+<script>
+
+	/*studentModule*/
+////////////////////////////////////////////////////////////////////
+	var studentModule = (function() {
+		var size = 0;
+		var mass = [];
+
+		function Student(surname, name, age, averageMark) {
+			this.surname = surname;
+			this.name = name;
+			age == "" ? this.age = undefined : this.age = +age;
+			averageMark == "" ? this.averageMark = undefined : this.averageMark = +averageMark;
+		}
+		var addStudent = function(surname, name, age, averageMark) {
+			mass[size] = new Student(surname, name, age, averageMark);
+			size++;
+		};
+		var getName = function(ind) {
+			if (size == 0 || ind >= size) {
+				return;
+			}
+			return mass[ind].name;
+		};
+		var getSurname = function(ind) {
+			if (size == 0 || ind >= size) {
+				return;
+			}
+			return mass[ind].surname;
+		};
+		var getAge = function(ind) {
+			if (size == 0 || ind >= size) {
+				return;
+			}
+			return mass[ind].age;
+		};
+		var getAverageMark = function(ind) {
+			if (size == 0 || ind >= size) {
+				return;
+			}
+			return mass[ind].averageMark;
+		};
+		var setName = function(ind, name) {
+			if (size == 0 || ind >= size) {
+				return;
+			}
+			mass[ind].name = name;
+		};
+		var setSurname = function(ind, surname) {
+			if (size == 0 || ind >= size) {
+				return;
+			}
+			mass[ind].surname = surname;
+		};
+		var setAge = function(ind, age) {
+			if (size == 0 || ind >= size) {
+				return;
+			}
+			if (age == "") {
+				mass[ind].age = undefined;
+			}
+			else {
+				mass[ind].age = +age;
+			}
+		};
+		var setAverageMark = function(ind, averageMark) {
+			if (size == 0 || ind >= size) {
+				return;
+			}
+			if (averageMark == "") {
+				mass[ind].averageMark = undefined;
+			}
+			else {
+				mass[ind].averageMark = +averageMark;
+			}
+		};
+		var getSize = function() {
+			return size;
+		};
+		var getStudent = function(ind) {
+			if (size == 0 || ind >= size) {
+				return;
+			}
+			return mass[ind];
+		};
+		var removeStudent = function(ind) {
+			if (size == 0 || ind >= size) {
+				return;
+			}
+			let temp = [];
+			for (let i = 0, cur = 0; i < size; i++) {
+				if (i != ind) {
+					temp[cur] = mass[i];
+					cur++;
+				}
+			}
+			mass = temp;
+			size--;
+		};
+		return {
+			addStudent: addStudent,
+			removeStudent: removeStudent,
+			getName: getName,
+			getSurname: getSurname,
+			getAge: getAge,
+			getAverageMark: getAverageMark,
+			setName: setName,
+			setSurname: setSurname,
+			setAge: setAge,
+			setAverageMark: setAverageMark,
+			getSize: getSize,
+			getStudent: getStudent
+		};
+	}());
+	////////////////////////////////////////////////////////////////////
+	function tableStudent(studentModule) {
+		let table = $("<table>", {'border':'1px', 'id':'MyTable'});
+        tr = $("<tr>");
+		for (let i = 0; i < 6; i++) {
+			td = $("<td>");
+                i == 0 ? td.text("Фамилия") : i == 1 ? td.text("Имя") : i == 2 ? td.text("Возраст") : i == 3 ?
+                td.text("Средний балл") : i == 4 ? td.text("Удаление") : td.text("Редактирование");
+            tr.append(td);
+        }
+		table.append(tr);
+		for (let i = 0; i < studentModule.getSize(); i++) {
+			tr = createRow(studentModule.getStudent(i));
+			table.append(tr);
+			
+		}
+		return table;
+	}
+
+	function computeAverage() {
+		let markArray = $(".averageMark");
+		let averageMark = 0;
+		for (let i = 0; i < markArray.length; i++) {
+			averageMark += +markArray[i].innerHTML;
+		}
+		averageMark /= markArray.length;
+		return +averageMark.toFixed(2);
+	}
+
+	function tableAddStudent() {
+		if ($('#surname').val() == "" && $('#name').val() == "" && $('#age').val() == "" && $('#averageMark').val() == "") {
+			return;
+		}
+		studentModule.addStudent($('#surname').val(), $('#name').val(), $('#age').val(), $('#averageMark').val());
+		let tr;
+		tr = createRow(studentModule.getStudent(studentModule.getSize() - 1));
+		$('#MyTable').append(tr);
+		$('#totalAverageMark').text("Общий средний балл среди студентов: " + computeAverage());
+	}
+
+	function tableRemoveStudent() {
+		var index = $('#index').val();
+		if (index == "") {
+			return;
+		}
+		index = +index;
+		deleteRow($('tr')[index].childNodes[4].childNodes[0]);
+		$('#totalAverageMark').text("Общий средний балл среди студентов: " + computeAverage());
+		$('#myForm')[0].reset();
+	}
+
+	function deleteRow(current) {
+		let allDelButtons = $(".delButton");
+		let allTr = $('tr');
+		for (let i = 0; i < allDelButtons.length; i++) {
+			if (current == allDelButtons[i]) {
+				allTr[i + 1].remove();
+				studentModule.removeStudent(i);
+				$('#totalAverageMark').text("Общий средний балл среди студентов: " + computeAverage());
+				break;
+			}
+		}
+	}
+
+	function editRow(current) {
+		let allEditButtons = $(".editButton");
+		let newTr = $("<tr>");
+		let allTr = $('tr');
+		for (let i = 0; i < allEditButtons.length; i++) {
+			if (current == allEditButtons[i]) {
+				if ($('#surname').val() == "" && $('#name').val() == "" && $('#age').val() == "" && $('#averageMark').val() == "") {
+					return;
+				}
+				studentModule.setSurname(i, $('#surname').val());
+				studentModule.setName(i, $('#name').val());
+				studentModule.setAge(i, $('#age').val());
+				studentModule.setAverageMark(i, $('#averageMark').val());
+				let tr = createRow(studentModule.getStudent(i));
+				jQuery.each(tr, function() {
+					console.log(this);
+					allTr[i + 1.].innerHTML=this.innerHTML;
+				})
+				$('#totalAverageMark').text("Общий средний балл среди студентов: " + computeAverage());
+			}
+		}
+		$('#myForm')[0].reset();
+	}
+	
+	function createRow(student) {
+		let tr = $("<tr>"), td;
+        let ind = 0;
+        jQuery.each(student, function() {
+            td = $("<td>", {text:this});
+            ind++;
+            if (ind == 4) {
+                td.attr("class", "averageMark");
+            }
+            tr.append(td);
+        });
+		td = $("<td>");
+		let button = $("<button>", {"onclick":"deleteRow(this)", 'class':'delButton', text:'Удалить'});
+		td.append(button);
+		tr.append(td);
+		td = $("<td>");
+		let edit = $("<button>", {"onclick":"editRow(this)", 'class':'editButton', text:'Редактировать'});
+		td.append(edit);
+		tr.append(td);
+		return tr;
+	}
+	$.ajax({ 
+		   	method: "GET",    
+		   	url: "http://localhost:3000", 
+		   	dataType: "json", 
+		   	data: {},
+		    success: function(data) {
+				for (let i = 0; i < data.length; i++) {
+					studentModule.addStudent(data[i].surname, data[i].name, data[i].age, data[i].averageMark);
+				}
+				let table = tableStudent(studentModule);
+				$("#section").append(table);
+				let totalAverageMark = $("<p>", {text:"Общий средний балл среди студентов: " + computeAverage(), 'id':'totalAverageMark'});
+				$('section').append(totalAverageMark);
+			}
+		});
+
+</script>
+</body>
+</html>
