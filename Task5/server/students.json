@@ -1,0 +1,32 @@
+[
+    {
+        "surname":"Иванов",
+        "name":"Иван",
+        "age":19,
+        "averageMark":9
+    },
+    {
+        "surname":"Петров",
+        "name":"Степан",
+        "age":18,
+        "averageMark":7
+    },
+    {
+        "surname":"Сидоров",
+        "name":"Андрей",
+        "age":19,
+        "averageMark":8
+    },
+    {
+        "surname":"Филатов",
+        "name":"Евгений",
+        "age":22,
+        "averageMark":8.5
+    },
+    {
+        "surname":"Плюшкин",
+        "name":"Алексей",
+        "age":21,
+        "averageMark":7
+    }
+]
