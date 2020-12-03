@@ -125,8 +125,7 @@
 			$scope.computeAverage();
 		})
 	});
-	/*studentModule*/
-////////////////////////////////////////////////////////////////////
+
 	var studentModule = (function() {
 		var size = 0;
 		var mass = [];
@@ -237,130 +236,6 @@
 			getStudent: getStudent
 		};
 	}());
-	/////////////////////////////////////////////////////////////////
-	// function tableStudent(studentModule) {
-	// 	let table = $("<table>", {'border':'1px', 'id':'MyTable'});
-    //     tr = $("<tr>");
-	// 	for (let i = 0; i < 6; i++) {
-	// 		td = $("<td>");
-    //             i == 0 ? td.text("Фамилия") : i == 1 ? td.text("Имя") : i == 2 ? td.text("Возраст") : i == 3 ?
-    //             td.text("Средний балл") : i == 4 ? td.text("Удаление") : td.text("Редактирование");
-    //         tr.append(td);
-    //     }
-	// 	table.append(tr);
-	// 	for (let i = 0; i < studentModule.getSize(); i++) {
-	// 		tr = createRow(studentModule.getStudent(i));
-	// 		table.append(tr);
-			
-	// 	}
-	// 	return table;
-	// }
-
-	// function computeAverage() {
-	// 	let markArray = $(".averageMark");
-	// 	let averageMark = 0;
-	// 	for (let i = 0; i < markArray.length; i++) {
-	// 		averageMark += +markArray[i].innerHTML;
-	// 	}
-	// 	averageMark /= markArray.length;
-	// 	return +averageMark.toFixed(2);
-	// }
-
-	// function tableAddStudent() {
-	// 	if ($('#surname').val() == "" && $('#name').val() == "" && $('#age').val() == "" && $('#averageMark').val() == "") {
-	// 		return;
-	// 	}
-	// 	studentModule.addStudent($('#surname').val(), $('#name').val(), $('#age').val(), $('#averageMark').val());
-	// 	let tr;
-	// 	tr = createRow(studentModule.getStudent(studentModule.getSize() - 1));
-	// 	$('#MyTable').append(tr);
-	// 	$('#totalAverageMark').text("Общий средний балл среди студентов: " + computeAverage());
-	// }
-
-	// function tableRemoveStudent() {
-	// 	var index = $('#index').val();
-	// 	if (index == "") {
-	// 		return;
-	// 	}
-	// 	index = +index;
-	// 	deleteRow($('tr')[index].childNodes[4].childNodes[0]);
-	// 	$('#totalAverageMark').text("Общий средний балл среди студентов: " + computeAverage());
-	// 	$('#myForm')[0].reset();
-	// }
-
-	// function deleteRow(current) {
-	// 	let allDelButtons = $(".delButton");
-	// 	let allTr = $('tr');
-	// 	for (let i = 0; i < allDelButtons.length; i++) {
-	// 		if (current == allDelButtons[i]) {
-	// 			allTr[i + 1].remove();
-	// 			studentModule.removeStudent(i);
-	// 			$('#totalAverageMark').text("Общий средний балл среди студентов: " + computeAverage());
-	// 			break;
-	// 		}
-	// 	}
-	// }
-
-	// function editRow(current) {
-	// 	let allEditButtons = $(".editButton");
-	// 	let newTr = $("<tr>");
-	// 	let allTr = $('tr');
-	// 	for (let i = 0; i < allEditButtons.length; i++) {
-	// 		if (current == allEditButtons[i]) {
-	// 			if ($('#surname').val() == "" && $('#name').val() == "" && $('#age').val() == "" && $('#averageMark').val() == "") {
-	// 				return;
-	// 			}
-	// 			studentModule.setSurname(i, $('#surname').val());
-	// 			studentModule.setName(i, $('#name').val());
-	// 			studentModule.setAge(i, $('#age').val());
-	// 			studentModule.setAverageMark(i, $('#averageMark').val());
-	// 			let tr = createRow(studentModule.getStudent(i));
-	// 			jQuery.each(tr, function() {
-	// 				console.log(this);
-	// 				allTr[i + 1.].innerHTML=this.innerHTML;
-	// 			})
-	// 			$('#totalAverageMark').text("Общий средний балл среди студентов: " + computeAverage());
-	// 		}
-	// 	}
-	// 	$('#myForm')[0].reset();
-	// }
-	
-	// function createRow(student) {
-	// 	let tr = $("<tr>"), td;
-    //     let ind = 0;
-    //     jQuery.each(student, function() {
-    //         td = $("<td>", {text:this});
-    //         ind++;
-    //         if (ind == 4) {
-    //             td.attr("class", "averageMark");
-    //         }
-    //         tr.append(td);
-    //     });
-	// 	td = $("<td>");
-	// 	let button = $("<button>", {"onclick":"deleteRow(this)", 'class':'delButton', text:'Удалить'});
-	// 	td.append(button);
-	// 	tr.append(td);
-	// 	td = $("<td>");
-	// 	let edit = $("<button>", {"onclick":"editRow(this)", 'class':'editButton', text:'Редактировать'});
-	// 	td.append(edit);
-	// 	tr.append(td);
-	// 	return tr;
-	// }
-	// $.ajax({ 
-	// 	   	method: "GET",    
-	// 	   	url: "http://localhost:3000", 
-	// 	   	dataType: "json", 
-	// 	   	data: {},
-	// 	    success: function(data) {
-	// 			for (let i = 0; i < data.length; i++) {
-	// 				studentModule.addStudent(data[i].surname, data[i].name, data[i].age, data[i].averageMark);
-	// 			}
-	// 			let table = tableStudent(studentModule);
-	// 			$("#section").append(table);
-	// 			let totalAverageMark = $("<p>", {text:"Общий средний балл среди студентов: " + computeAverage(), 'id':'totalAverageMark'});
-	// 			$('section').append(totalAverageMark);
-	// 		}
-	// 	});
 
 </script>
 </body>
