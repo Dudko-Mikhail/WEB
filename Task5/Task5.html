@@ -34,6 +34,7 @@
 		<input class="first" type="text" id="index" ng-model="answer.ind" placeholder="Номер студента"/>
 		<button id="removeStudent" type="reset" ng-click="tableRemoveStudent(answer)">Удалить</button>
 	</form>
+	<p>Общий средний балл среди студентов: {{totalAverageMark}}</p>
 	<table border="1px">
 		<tr>
 			<td>Фамилия</td>
@@ -51,9 +52,7 @@
 			<td><button ng-click="deleteRow($index)">Удалить</button></td>
 			<td><button ng-click="editRow($index, answer)">Редактировать</button></td>
 		</tr>
-		<p>Общий средний балл среди студентов: {{totalAverageMark}}</p>
 	</table>
-	<section id="#sec"></section>
 </div>
 <script>
 	var myApp = angular.module('myApp', []);
