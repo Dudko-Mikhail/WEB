@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Task6</title> 
+        <script src="https://unpkg.com/react@16/umd/react.development.js"></script>
+        <script src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.js"></script>
+        <link rel="stylesheet" type="text/css" href="style.css">
+    </head>
+    <section id="root"></section>
+    <script type="text/babel">
+        var studentModule = (function() {
+                var size = 0;
+                var mass = [];
+
+                function Student(surname, name, age, averageMark) {
+                    this.surname = surname;
+                    this.name = name;
+                    age == "" ? this.age = undefined : this.age = +age;
+                    averageMark == "" ? this.averageMark = undefined : this.averageMark = +averageMark;
+                }
+                var addStudent = function(surname, name, age, averageMark) {
+                    mass[size] = new Student(surname, name, age, averageMark);
+                    size++;
+                };
+                var getName = (ind) => {
+                     if (size == 0 || ind >= size) {
+                        return;
+                    }
+                    return mass[ind].name;
+                };
+                var getSurname = (ind) => {
+                    if (size == 0 || ind >= size) {
+                        return;
+                    }
+                    return mass[ind].surname;
+                };
+                var getAge = (ind) => {
+                    if (size == 0 || ind >= size) {
+                        return;
+                    }
+                    return mass[ind].age;
+                };
+                var getAverageMark = (ind) => {
+                    if (size == 0 || ind >= size) {
+                        return;
+                    }
+                    return mass[ind].averageMark;
+                };
+                var setName = (ind, name) => {
+                    if (size == 0 || ind >= size) {
+                        return;
+                    }
+                    mass[ind].name = name;
+                };
+                var setSurname = (ind, surname) => {
+                    if (size == 0 || ind >= size) {
+                        return;
+                    }
+                    mass[ind].surname = surname;
+                };
+                var setAge = (ind, age) => {
+                    if (size == 0 || ind >= size) {
+                        return;
+                    }
+                    if (age == "") {
+                        mass[ind].age = undefined;
+                    }
+                    else {
+                        mass[ind].age = +age;
+                }
+                };
+                var setAverageMark = (ind, averageMark) => {
+                    if (size == 0 || ind >= size) {
+                        return;
+                    }
+                    if (averageMark == "") {
+                        mass[ind].averageMark = undefined;
+                    }
+                    else {
+                        mass[ind].averageMark = +averageMark;
+                    }
+                };
+                var getSize = () => {
+                    return size;
+                };
+                var getStudent = (ind) => {
+                    if (size == 0 || ind >= size) {
+                        return;
+                    }
+                    return mass[ind];
+                };
+                var removeStudent = (ind) => {
+                    if (size == 0 || ind >= size) {
+                        return;
+                    }
+                    mass.splice(ind,1);
+                    size--;
+                };
+                return {
+                    addStudent: addStudent,
+                    removeStudent: removeStudent,
+                    getName: getName,
+                    getSurname: getSurname,
+                    getAge: getAge,
+                    getAverageMark: getAverageMark,
+                    setName: setName,
+                    setSurname: setSurname,
+                    setAge: setAge,
+                    setAverageMark: setAverageMark,
+                    getSize: getSize,
+                    getStudent: getStudent
+                };
+            }()); 
+        class App extends React.Component {
+            constructor(props) {
+                super (props);
+                var all = [];
+                this.state = {
+                    student: {
+                        name:"",
+                        surname:"",
+                        age:"",
+                        averageMark:""
+                    },
+                    studentNumber:"",
+                    totalAverageMark:"",
+                    data: []
+                };
+                this.removeStudent = this.removeStudent.bind(this);
+                this.addStudent = this.addStudent.bind(this);
+                this.addProperty = this.addProperty.bind(this);
+                this.getStudentNumber = this.getStudentNumber.bind(this);
+                this.tableRemoveStudent = this.tableRemoveStudent.bind(this);
+                this.editStudent = this.editStudent.bind(this);
+            }
+            componentDidMount() {
+                fetch('http://localhost:3000')
+                .then(res => res.json())
+                .then(
+                    (result) => {
+                    this.setState({data:result});
+                    this.setState({totalAverageMark:this.computeAverage()});
+                    console.log('success response');
+                },
+                (error) => {
+                    console.log('response failed');
+                }
+            )}
+
+            addStudent(e) {
+                const student = this.state.student;
+                let count = 0;
+                for (let prop in student) {
+                    if (student[prop] === '')
+                        count++;
+                }
+                if (count == 4) {
+                    return;
+                }
+                studentModule.addStudent(student.surname, student.name, student.age, student.averageMark);
+                this.setState(prevState => {
+                    const data = prevState.data;
+                    data.push(studentModule.getStudent(studentModule.getSize() - 1));
+                    for (let prop in student) {
+                        student[prop] = "";
+                    }
+                    return {data, totalAverageMark:this.computeAverage(), student};
+                })
+            }
+            removeStudent(e) {
+                const ind = +this.state.studentNumber - 1;
+                if (ind === "" || ind < 0) {
+                    return;
+                }
+                studentModule.removeStudent(ind);
+                this.setState(prevState => {
+                    const data = prevState.data;
+                    data.splice(ind, 1);
+                    return {data, totalAverageMark:this.computeAverage(), studentNumber:""};
+                })
+            }
+            addProperty(e) {
+                const val = e.target.value;
+                const prop = e.target.name;
+                this.setState(prevState => {
+                    const student = prevState.student;
+                    student[prop] = val;
+                    return {student};
+                })
+            }
+            getStudentNumber(e) {
+                const val = e.target.value;
+                this.setState({studentNumber:val});
+            }
+            computeAverage() {
+            let sum = 0;
+			for (let student of this.state.data) {
+				sum += student.averageMark;
+			}
+            return (sum /= this.state.data.length).toFixed(2);
+            }
+            tableRemoveStudent(e) {
+                const ind = e.target.id;
+                studentModule.removeStudent(ind);
+                this.setState(prevState => {
+                    const data = prevState.data;
+                    data.splice(ind, 1);
+                    return {data, totalAverageMark:this.computeAverage()};
+                })
+            }
+            editStudent(e) {
+                const ind = parseInt(e.target.id);
+                this.setState(prevState => {
+                    const student = prevState.student;
+                    studentModule.setName(ind, student.name);
+			        studentModule.setSurname(ind, student.surname);
+			        studentModule.setAge(ind, student.age);
+			        studentModule.setAverageMark(ind, student.averageMark);
+                    const data = prevState.data;
+                    for (let prop in student) {
+                        data[ind][prop]=student[prop];
+                    }
+                    for (let prop in student) {
+                        student[prop] = "";
+                    }
+                    return {data, totalAverageMark:this.computeAverage(), student};
+                })
+            }
+            render () {
+                return (
+                    <div>
+                        <form className='myForm'>
+                            <input type='text' name='surname' value={this.state.student.surname} onChange={this.addProperty} placeholder='Фамилия'></input>
+                            <input type='text' name='name' value={this.state.student.name} onChange={this.addProperty} placeholder='Имя'></input>
+                            <input type='number' min = '0' name='age' value={this.state.student.age} onChange={this.addProperty} placeholder='Возраст'></input>
+                            <input type='number' min = '0' name='averageMark' value={this.state.student.averageMark} onChange={this.addProperty} placeholder='Средний балл'></input>
+                            <button type='reset' onClick={this.addStudent}>Добавить</button>
+                            <br/>
+                            <input type='number' min='1' value={this.state.studentNumber} onChange={this.getStudentNumber} placeholder='Номер студента'></input>
+                            <button type='reset' onClick={this.removeStudent}>Удалить</button>
+                        </form>
+                        <p>Общий средний балл среди студентов: {this.state.totalAverageMark}</p>
+
+                        <table className='table'>
+                            <tbody>
+                                <tr>
+                                    <td>Фамилия</td>
+                                    <td>Имя</td>
+                                    <td>Возраст</td>
+                                    <td>Средний балл</td>
+                                    <td>Удаление</td>
+                                    <td>Редактирование</td>
+                                </tr>
+                                {this.state.data.map((student, index) => (
+                                <tr key={index}>
+                                    <td>{student.surname}</td>
+                                    <td>{student.name}</td>
+                                    <td>{student.age}</td>
+                                    <td>{student.averageMark}</td>
+                                    <td><button id={index} onClick={this.tableRemoveStudent}>Удалить</button></td>
+                                    <td><button id={index + 'e'} onClick={this.editStudent}>Редактировать</button></td>
+                                </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    </div>
+                );
+            }
+        }
+
+        ReactDOM.render(<App />, 
+            document.getElementById('root')
+        );
+    </script>
+</html>
